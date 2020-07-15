@@ -58,15 +58,22 @@ class Cocktail_Serializer(serializers.HyperlinkedModelSerializer):
         instance.tags.set(*tags)
         return instance
 
+
+class RecursiveSerializer(serializers.Serializer):
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
 class Comment_Serializer(serializers.HyperlinkedModelSerializer):
+    reply_set = RecursiveSerializer(many=True, read_only=True)
     author = UserDetailSerializer()
     class Meta:
         model = Comment
-        fields = ('url', 'id', 'author', 'body', 'cocktail')
+        fields = ('url', 'id', 'author', 'body', 'cocktail', 'date', 'parent', 'reply_set')
 
 
 class Like_Serializer(serializers.HyperlinkedModelSerializer):
-    user = UserDetailSerializer()
+    user = UserDetailSerializer(), 
     class Meta:
         model = Like
         fields = ('url', 'id', 'user', 'value', 'cocktail')

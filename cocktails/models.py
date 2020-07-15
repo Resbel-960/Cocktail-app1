@@ -126,8 +126,12 @@ class Comment (models.Model):
     author=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField( blank=False, null=False)
     cocktail= models.ForeignKey('Cocktail', related_name='comments', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', related_name='reply_set', null=True, blank=True, on_delete=models.PROTECT)
+    date = models.DateField(auto_now=True)
+
+
 
     def __str__(self):
-        return f'{self.author} --- {self.body}'
+        return f'{self.author} --- {self.cocktail}'
     def get_absolute_url(self):
         return reverse("_detail", kwargs={"pk": self.pk})
