@@ -43,9 +43,9 @@ class Ingridient_View(viewsets.ModelViewSet):
 class Cocktail_View(viewsets.ModelViewSet):
     queryset = Cocktail.objects.all()
     serializer_class = Cocktail_Serializer
-    filter_backends = (DynamicSearchFilter,)
+    filter_backends = (DynamicSearchFilter, filters.OrderingFilter)
     search_fields = ['author__username', 'title', 'tags__name', 'ingridient__name', 'body']
-    filter_backends = [filters.OrderingFilter]
+    # filter_backends = [filters.OrderingFilter]
     ordering_fields = ['pub_date']
     ordering = ('-pub_date')
 
